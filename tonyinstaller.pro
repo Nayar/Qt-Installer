@@ -13,15 +13,14 @@ TEMPLATE = app
 
 
 SOURCES += main.cpp\
-        mainwindow.cpp \
     licensewizard.cpp \
     functions.cpp
 
-HEADERS  += mainwindow.h \
+HEADERS  += \
     licensewizard.h \
     functions.h
 
-FORMS    += mainwindow.ui
+FORMS    +=
 
 DISTFILES += \
     tonyinstaller.pro.autosave \
