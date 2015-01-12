@@ -78,8 +78,6 @@ public:
 
 private:
     QLabel *topLabel;
-    QRadioButton *registerRadioButton;
-    QRadioButton *evaluateRadioButton;
 };
 
 class EvaluatePage : public QWizardPage
@@ -106,12 +104,13 @@ public:
     RegisterPage(QWidget *parent = 0);
 
     int nextId() const Q_DECL_OVERRIDE;
+    bool validatePage();
 
 private:
     QLabel *nameLabel;
-    QLabel *upgradeKeyLabel;
+    QLabel *keyLabel;
     QLineEdit *nameLineEdit;
-    QLineEdit *upgradeKeyLineEdit;
+    QLineEdit *keyLineEdit;
 };
 
 class DetailsPage : public QWizardPage

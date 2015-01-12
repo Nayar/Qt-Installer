@@ -43,6 +43,7 @@
 #include <QPrintDialog>
 
 #include "licensewizard.h"
+#include "functions.h"
 
 LicenseWizard::LicenseWizard(QWidget *parent)
     : QWizard(parent)
@@ -66,8 +67,7 @@ LicenseWizard::LicenseWizard(QWidget *parent)
     connect(this, SIGNAL(helpRequested()), this, SLOT(showHelp()));
 
 
-    setWindowTitle(tr("License Wizard"));
-
+    setWindowTitle(tr("Java App Installer"));
 }
 
 
@@ -81,8 +81,7 @@ void LicenseWizard::showHelp()
 
     switch (currentId()) {
     case Page_Intro:
-        message = tr("The decision you make here will affect which page you "
-                     "get to see next.");
+        message = tr("");
         break;
 
     case Page_Evaluate:
@@ -127,33 +126,28 @@ IntroPage::IntroPage(QWidget *parent)
     setTitle(tr("Introduction"));
     setPixmap(QWizard::WatermarkPixmap, QPixmap(":/images/watermark.png"));
 
-    topLabel = new QLabel(tr("This wizard will help you register your copy of "
-                             "<i>Super Product One</i>&trade; or start "
-                             "evaluating the product."));
+    topLabel = new QLabel(tr("This wizard will help you register and install your copy of "
+                             "<i>Super Product One</i>&trade;"));
     topLabel->setWordWrap(true);
 
-    registerRadioButton = new QRadioButton(tr("&Register your copy"));
-    evaluateRadioButton = new QRadioButton(tr("&Evaluate the product for 30 "
-                                              "days"));
-    registerRadioButton->setChecked(true);
+    QLabel *javaEnabled = new QLabel();
+    if(isJavaInstalled()){
+        javaEnabled->setText("Java has been detected on your system :)");
+    }else{
+         javaEnabled->setText("Java is NOT installed on your system. Download: https://java.com/en/download/");
+    }
 
     QVBoxLayout *layout = new QVBoxLayout;
     layout->addWidget(topLabel);
-    layout->addWidget(registerRadioButton);
-    layout->addWidget(evaluateRadioButton);
+    layout->addWidget(javaEnabled);
     setLayout(layout);
 }
 
 
 
 int IntroPage::nextId() const
-
 {
-    if (evaluateRadioButton->isChecked()) {
-        return LicenseWizard::Page_Evaluate;
-    } else {
-        return LicenseWizard::Page_Register;
-    }
+    return LicenseWizard::Page_Register;
 }
 
 
@@ -201,36 +195,42 @@ RegisterPage::RegisterPage(QWidget *parent)
     : QWizardPage(parent)
 {
     setTitle(tr("Register Your Copy of <i>Super Product One</i>&trade;"));
-    setSubTitle(tr("If you have an upgrade key, please fill in "
-                   "the appropriate field."));
+    setSubTitle(tr("Enter your secret key"));
 
     nameLabel = new QLabel(tr("N&ame:"));
     nameLineEdit = new QLineEdit;
     nameLabel->setBuddy(nameLineEdit);
 
-    upgradeKeyLabel = new QLabel(tr("&Upgrade key:"));
-    upgradeKeyLineEdit = new QLineEdit;
-    upgradeKeyLabel->setBuddy(upgradeKeyLineEdit);
+   keyLabel = new QLabel(tr("&Key:"));
+   keyLineEdit = new QLineEdit;
+   keyLabel->setBuddy(keyLineEdit);
 
     registerField("register.name*", nameLineEdit);
-    registerField("register.upgradeKey", upgradeKeyLineEdit);
-
+    registerField("register.key*",keyLineEdit);
     QGridLayout *layout = new QGridLayout;
     layout->addWidget(nameLabel, 0, 0);
     layout->addWidget(nameLineEdit, 0, 1);
-    layout->addWidget(upgradeKeyLabel, 1, 0);
-    layout->addWidget(upgradeKeyLineEdit, 1, 1);
+    layout->addWidget(keyLabel, 1, 0);
+    layout->addWidget(keyLineEdit, 1, 1);
     setLayout(layout);
 }
 
-
 int RegisterPage::nextId() const
 {
-    if (upgradeKeyLineEdit->text().isEmpty()) {
+    if (keyLineEdit->text().isEmpty()) {
         return LicenseWizard::Page_Details;
     } else {
         return LicenseWizard::Page_Conclusion;
     }
+}
+
+bool RegisterPage::validatePage()
+{
+    if (keyLineEdit->text().isEmpty()) {
+        keyLineEdit->setText("fill");
+        return false;
+    }
+    return true;
 }
 
 
