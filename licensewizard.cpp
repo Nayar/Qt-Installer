@@ -44,43 +44,36 @@
 
 #include "licensewizard.h"
 
-//! [0] //! [1] //! [2]
 LicenseWizard::LicenseWizard(QWidget *parent)
     : QWizard(parent)
 {
-//! [0]
     setPage(Page_Intro, new IntroPage);
     setPage(Page_Evaluate, new EvaluatePage);
     setPage(Page_Register, new RegisterPage);
     setPage(Page_Details, new DetailsPage);
     setPage(Page_Conclusion, new ConclusionPage);
-//! [1]
 
     setStartId(Page_Intro);
-//! [2]
 
-//! [3]
 #ifndef Q_OS_MAC
-//! [3] //! [4]
     setWizardStyle(ModernStyle);
 #endif
-//! [4] //! [5]
+
     setOption(HaveHelpButton, true);
-//! [5] //! [6]
+
     setPixmap(QWizard::LogoPixmap, QPixmap(":/images/logo.png"));
 
-//! [7]
     connect(this, SIGNAL(helpRequested()), this, SLOT(showHelp()));
-//! [7]
+
 
     setWindowTitle(tr("License Wizard"));
-//! [8]
-}
-//! [6] //! [8]
 
-//! [9] //! [10]
+}
+
+
+
 void LicenseWizard::showHelp()
-//! [9] //! [11]
+
 {
     static QString lastHelpMessage;
 
@@ -91,7 +84,7 @@ void LicenseWizard::showHelp()
         message = tr("The decision you make here will affect which page you "
                      "get to see next.");
         break;
-//! [10] //! [11]
+
     case Page_Evaluate:
         message = tr("Make sure to provide a valid email address, such as "
                      "toni.buddenbrook@example.de.");
@@ -108,26 +101,26 @@ void LicenseWizard::showHelp()
         message = tr("You must accept the terms and conditions of the "
                      "license to proceed.");
         break;
-//! [12] //! [13]
+
     default:
         message = tr("This help is likely not to be of any help.");
     }
-//! [12]
+
 
     if (lastHelpMessage == message)
         message = tr("Sorry, I already gave what help I could. "
                      "Maybe you should try asking a human?");
 
-//! [14]
+
     QMessageBox::information(this, tr("License Wizard Help"), message);
-//! [14]
+
 
     lastHelpMessage = message;
-//! [15]
-}
-//! [13] //! [15]
 
-//! [16]
+}
+
+
+
 IntroPage::IntroPage(QWidget *parent)
     : QWizardPage(parent)
 {
@@ -150,11 +143,11 @@ IntroPage::IntroPage(QWidget *parent)
     layout->addWidget(evaluateRadioButton);
     setLayout(layout);
 }
-//! [16] //! [17]
 
-//! [18]
+
+
 int IntroPage::nextId() const
-//! [17] //! [19]
+
 {
     if (evaluateRadioButton->isChecked()) {
         return LicenseWizard::Page_Evaluate;
@@ -162,9 +155,9 @@ int IntroPage::nextId() const
         return LicenseWizard::Page_Register;
     }
 }
-//! [18] //! [19]
 
-//! [20]
+
+
 EvaluatePage::EvaluatePage(QWidget *parent)
     : QWizardPage(parent)
 {
@@ -174,7 +167,7 @@ EvaluatePage::EvaluatePage(QWidget *parent)
 
     nameLabel = new QLabel(tr("N&ame:"));
     nameLineEdit = new QLineEdit;
-//! [20]
+
     nameLabel->setBuddy(nameLineEdit);
 
     emailLabel = new QLabel(tr("&Email address:"));
@@ -182,10 +175,10 @@ EvaluatePage::EvaluatePage(QWidget *parent)
     emailLineEdit->setValidator(new QRegExpValidator(QRegExp(".*@.*"), this));
     emailLabel->setBuddy(emailLineEdit);
 
-//! [21]
+
     registerField("evaluate.name*", nameLineEdit);
     registerField("evaluate.email*", emailLineEdit);
-//! [21]
+
 
     QGridLayout *layout = new QGridLayout;
     layout->addWidget(nameLabel, 0, 0);
@@ -193,16 +186,16 @@ EvaluatePage::EvaluatePage(QWidget *parent)
     layout->addWidget(emailLabel, 1, 0);
     layout->addWidget(emailLineEdit, 1, 1);
     setLayout(layout);
-//! [22]
-}
-//! [22]
 
-//! [23]
+}
+
+
+
 int EvaluatePage::nextId() const
 {
     return LicenseWizard::Page_Conclusion;
 }
-//! [23]
+
 
 RegisterPage::RegisterPage(QWidget *parent)
     : QWizardPage(parent)
@@ -230,7 +223,7 @@ RegisterPage::RegisterPage(QWidget *parent)
     setLayout(layout);
 }
 
-//! [24]
+
 int RegisterPage::nextId() const
 {
     if (upgradeKeyLineEdit->text().isEmpty()) {
@@ -239,7 +232,7 @@ int RegisterPage::nextId() const
         return LicenseWizard::Page_Conclusion;
     }
 }
-//! [24]
+
 
 DetailsPage::DetailsPage(QWidget *parent)
     : QWizardPage(parent)
@@ -275,12 +268,12 @@ DetailsPage::DetailsPage(QWidget *parent)
     setLayout(layout);
 }
 
-//! [25]
+
 int DetailsPage::nextId() const
 {
     return LicenseWizard::Page_Conclusion;
 }
-//! [25]
+
 
 ConclusionPage::ConclusionPage(QWidget *parent)
     : QWizardPage(parent)
@@ -301,14 +294,14 @@ ConclusionPage::ConclusionPage(QWidget *parent)
     setLayout(layout);
 }
 
-//! [26]
+
 int ConclusionPage::nextId() const
 {
     return -1;
 }
-//! [26]
 
-//! [27]
+
+
 void ConclusionPage::initializePage()
 {
     QString licenseText;
@@ -328,27 +321,27 @@ void ConclusionPage::initializePage()
     }
     bottomLabel->setText(licenseText);
 }
-//! [27]
 
-//! [28]
+
+
 void ConclusionPage::setVisible(bool visible)
 {
     QWizardPage::setVisible(visible);
 
     if (visible) {
-//! [29]
+
         wizard()->setButtonText(QWizard::CustomButton1, tr("&Print"));
         wizard()->setOption(QWizard::HaveCustomButton1, true);
         connect(wizard(), SIGNAL(customButtonClicked(int)),
                 this, SLOT(printButtonClicked()));
-//! [29]
+
     } else {
         wizard()->setOption(QWizard::HaveCustomButton1, false);
         disconnect(wizard(), SIGNAL(customButtonClicked(int)),
                    this, SLOT(printButtonClicked()));
     }
 }
-//! [28]
+
 
 void ConclusionPage::printButtonClicked()
 {

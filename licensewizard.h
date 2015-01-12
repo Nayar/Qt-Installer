@@ -50,27 +50,23 @@ class QLineEdit;
 class QRadioButton;
 QT_END_NAMESPACE
 
-//! [0] //! [1]
 class LicenseWizard : public QWizard
 {
-//! [0]
+
     Q_OBJECT
 
 public:
-//! [2]
+
     enum { Page_Intro, Page_Evaluate, Page_Register, Page_Details,
            Page_Conclusion };
-//! [2]
+
 
     LicenseWizard(QWidget *parent = 0);
 
 private slots:
     void showHelp();
-//! [3]
 };
-//! [1] //! [3]
 
-//! [4]
 class IntroPage : public QWizardPage
 {
     Q_OBJECT
@@ -85,9 +81,7 @@ private:
     QRadioButton *registerRadioButton;
     QRadioButton *evaluateRadioButton;
 };
-//! [4]
 
-//! [5]
 class EvaluatePage : public QWizardPage
 {
     Q_OBJECT
@@ -103,7 +97,6 @@ private:
     QLineEdit *nameLineEdit;
     QLineEdit *emailLineEdit;
 };
-//! [5]
 
 class RegisterPage : public QWizardPage
 {
@@ -139,7 +132,6 @@ private:
     QLineEdit *postalLineEdit;
 };
 
-//! [6]
 class ConclusionPage : public QWizardPage
 {
     Q_OBJECT
