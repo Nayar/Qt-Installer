@@ -4,24 +4,29 @@
 #
 #-------------------------------------------------
 
-QT       += core gui printsupport
+QT       += core gui network
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
-TARGET = tonyinstaller
+TARGET = tonydeploy
 TEMPLATE = app
 
 
 SOURCES += main.cpp\
     licensewizard.cpp \
-    functions.cpp
+    functions.cpp \
+    downloadmanager.cpp \
+    textprogressbar.cpp
 
 HEADERS  += \
     licensewizard.h \
-    functions.h
+    functions.h \
+    downloadmanager.h \
+    textprogressbar.h
 
-FORMS    +=
+FORMS    += \
+    downloadjava.ui
 
-DISTFILES += \
-    tonyinstaller.pro.autosave \
-    tonyinstaller.pro.user
+SUBDIRS += \
+    downloadmanager.pro
+

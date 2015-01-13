@@ -42,6 +42,7 @@
 #define LICENSEWIZARD_H
 
 #include <QWizard>
+#include "downloadmanager.h"
 
 QT_BEGIN_NAMESPACE
 class QCheckBox;
@@ -75,9 +76,18 @@ public:
     IntroPage(QWidget *parent = 0);
 
     int nextId() const Q_DECL_OVERRIDE;
+    bool validatePage();
 
 private:
     QLabel *topLabel;
+};
+
+class DownloadJavaPage : public QWizardPage{
+    Q_OBJECT
+
+public:
+    DownloadJavaPage(QWidget *parent = 0);
+    DownloadManager *dm;
 };
 
 class EvaluatePage : public QWizardPage

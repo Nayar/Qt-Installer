@@ -39,8 +39,6 @@
 ****************************************************************************/
 
 #include <QtWidgets>
-#include <QPrinter>
-#include <QPrintDialog>
 
 #include "licensewizard.h"
 #include "functions.h"
@@ -131,15 +129,21 @@ IntroPage::IntroPage(QWidget *parent)
     topLabel->setWordWrap(true);
 
     QLabel *javaEnabled = new QLabel();
+    QVBoxLayout *layout = new QVBoxLayout;
+    layout->addWidget(topLabel);
+    layout->addSpacerItem(new QSpacerItem(10,10));
+    layout->addWidget(javaEnabled);
     if(isJavaInstalled()){
         javaEnabled->setText("Java has been detected on your system :)");
     }else{
-         javaEnabled->setText("Java is NOT installed on your system. Download: https://java.com/en/download/");
+         javaEnabled->setText("Java is NOT installed on your system.");
+         QCheckBox *downloadJavaCheckbox = new QCheckBox("Download Java");
+         layout->addWidget(downloadJavaCheckbox);
+         registerField("install.java",downloadJavaCheckbox);
+         downloadJavaCheckbox->setChecked(true);
     }
+    layout->addSpacerItem(new QSpacerItem(10,10));
 
-    QVBoxLayout *layout = new QVBoxLayout;
-    layout->addWidget(topLabel);
-    layout->addWidget(javaEnabled);
     setLayout(layout);
 }
 
@@ -148,6 +152,15 @@ IntroPage::IntroPage(QWidget *parent)
 int IntroPage::nextId() const
 {
     return LicenseWizard::Page_Register;
+}
+
+bool IntroPage::validatePage()
+{
+    if(isJavaInstalled())
+        return true;
+    if(field("install.java").toString() == "true")
+        QDesktopServices::openUrl(QUrl("https://java.com/en/download/manual.jsp"));
+    return false;
 }
 
 
@@ -346,11 +359,13 @@ void ConclusionPage::setVisible(bool visible)
 void ConclusionPage::printButtonClicked()
 {
 #if !defined(QT_NO_PRINTER) && !defined(QT_NO_PRINTDIALOG)
-    QPrinter printer;
-    QPrintDialog dialog(&printer, this);
-    if (dialog.exec())
-        QMessageBox::warning(this, tr("Print License"),
-                             tr("As an environmentally friendly measure, the "
-                                "license text will not actually be printed."));
+
 #endif
+}
+
+
+DownloadJavaPage::DownloadJavaPage(QWidget *parent)
+{
+    dm = new DownloadManager();
+    dm->append(QUrl(""));
 }
